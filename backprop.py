@@ -84,6 +84,7 @@ class Value():
         return out
 
     def backward(self):
+        # topological sorting of the DAG
         topo = []
         visited = set()
         def build_topo(v):
@@ -140,32 +141,31 @@ class MLP():
 if __name__ == "__main__":
     vz = Visualize()
 
-    def perceptron():
-        x1 = Value(2.0, label='x1')
-        x2 = Value(0.0, label='x2')
-        w1 = Value(-3.0, label='w1')
-        w2 = Value(1.0, label='w2')
-        b = Value(6.8813735870195432, label='b')
-        x1w1 = x1 * w1; x1w1.label = 'x1*w1'
-        x2w2 = x2 * w2; x2w2.label = 'x2*w2'
-        x1w1x2w2 = x1w1 + x2w2; x1w1x2w2.label = 'x1*w1+x2*w2'
-        n = x1w1x2w2 + b; n.label = 'n'
-        e = (2*n).exp()
-        o = (e - 1) / (e + 1); o.label = 'o'
-        o.backward()
-        vz.render_graph(o)
+    # def perceptron():
+    #     x1 = Value(2.0, label='x1')
+    #     x2 = Value(0.0, label='x2')
+    #     w1 = Value(-3.0, label='w1')
+    #     w2 = Value(1.0, label='w2')
+    #     b = Value(6.8813735870195432, label='b')
+    #     x1w1 = x1 * w1; x1w1.label = 'x1*w1'
+    #     x2w2 = x2 * w2; x2w2.label = 'x2*w2'
+    #     x1w1x2w2 = x1w1 + x2w2; x1w1x2w2.label = 'x1*w1+x2*w2'
+    #     n = x1w1x2w2 + b; n.label = 'n'
+    #     e = (2*n).exp()
+    #     o = (e - 1) / (e + 1); o.label = 'o'
+    #     o.backward()
+    #     vz.render_graph(o)
     
-    x = [2.0, 3.0, -1.0]
-    n = MLP(3, [4,4,1])
+    x = [2.0, 3.0, -1.0, 5.0]
+    n = MLP(2, [2,2,1])
     n(x)
     xs = [
-        [2.0, 3.0, -1.0],
-        [3.0, -1.0, 0.5],
-        [0.5, 1.0, 1.0],
-        [1.0, 1.0, -1.0],
-        [2.0, -2.0, 1.0],
+        [2.0, 3.0, -1.0, 4.0],
+        [3.0, -1.0, 0.5, 2.0],
+        [1.0, 0.0, -1.0, 1.0],
+        [1.0, 1.0, 1.0, -1.0]
     ]
-    ys = [1.0, -1.0, -1.0, 1.0, -1.0]
+    ys = [1.0, -1.0, 1.0]
 
     learning_rate = 0.05
 
@@ -186,4 +186,4 @@ if __name__ == "__main__":
     print("Predictions:")
     print(ypred)
 
-    # vz.render_graph(loss)
+    vz.render_graph(loss)
